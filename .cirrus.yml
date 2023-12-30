@@ -1,7 +1,4 @@
-container:
-  image: ubuntu:latest
-
-task:
+docker_builder:
   timeout_in: 120m
   script:
     - (apt update && apt upgrade && apt install -yq aria2 curl ffmpeg fuse3 htop jq mkvtoolnix mkvtoolnix nano ncdu openssh-client openssh-server parallel postgresql-client qbittorrent-nox rename speedtest-cli tmux && service ssh start && apt autoremove --purge && apt clean) > /dev/null 2>&1
