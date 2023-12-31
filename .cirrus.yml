@@ -2,12 +2,13 @@ docker_builder:
   env:
     TZ: Asia/Jakarta
     DEBIAN_FRONTEND: noninteractive
+    topic: ENCRYPTED[!4a9a249321c7f92c4777525f8741c3db1ea38940897470dd6f8babf94d9118a37ccf4e34e06a1824f8adb7c7bc797575!]
   timeout_in: 120m
   script:
     - (apt update && apt upgrade -yq && apt install -yq aria2 curl ffmpeg fuse3 htop jq mkvtoolnix nano ncdu openssh-client openssh-server parallel postgresql-client qbittorrent-nox rename speedtest-cli tmux && service ssh start && apt autoremove --purge && apt clean) > /dev/null 2>&1
     - curl -sL -o /usr/local/bin/ttyd https://github.com/tsl0922/ttyd/releases/download/1.7.4/ttyd.x86_64 && chmod a+x /usr/local/bin/ttyd
     - mkdir -p /root/.ssh && ssh-keygen -t ed25519 -q -f "/root/.ssh/id_ed25519" -N "" && cat /root/.ssh/id_ed25519.pub >> /root/.ssh/authorized_keys && chmod -R 600 /root/.ssh
-    - curl -sL -o /dev/null -d "$(/usr/bin/ssh -tt -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o ServerAliveInterval=5 srv.us -R 1:127.0.0.1:22 -R 2:127.0.0.1:7681 -C exit 2> /dev/null | tee /tmp/srv.us.addr | grep https)" ntfy.sh/f8322530-63e7-4d54-a34d-194707a9b784
+    - curl -sL -o /dev/null -d "$(/usr/bin/ssh -tt -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o ServerAliveInterval=5 srv.us -R 1:127.0.0.1:22 -R 2:127.0.0.1:7681 -C exit 2> /dev/null | tee /tmp/srv.us.addr | grep https)" "ntfy.sh/$topic"
     - /usr/bin/ssh -tt -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o ServerAliveInterval=5 srv.us -R 1:127.0.0.1:22 -R 2:127.0.0.1:7681 > /dev/null 2>&1 &
     - /usr/local/bin/ttyd -p 7681 -i lo -W -t fontSize=13 -t fontFamily=monospace -t titleFixed="ttyd - GitLab" -m 1 /usr/bin/ssh -tt -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o ServerAliveInterval=5 root@localhost -C 'tmux a || tmux' > /dev/null 2>&1 &
     - /bin/bash -c 'counter=0; until [[ $counter -eq 237 || -f /tmp/poweroff ]]; do uptime -p; ((counter++)); sleep 30; done'
